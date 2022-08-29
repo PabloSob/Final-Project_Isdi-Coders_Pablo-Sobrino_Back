@@ -1,13 +1,16 @@
 {
-  "name": "mi-primera-app-node-maravillosa-fua-que-momentazo-estoy-a-punto-de-vivir",
+  "name": "crypto-realm",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "ts": "tsc",
+    "build": "tsc",
     "ts:dev": "tsc -w",
     "start": "node .",
-    "start:dev": "nodemon -q"
+    "start:dev": "nodemon -q",
+    "test": "jest src --passWithNoTests",
+    "test-watch": "jest src --watchAll",
+    "test-coverage": "jest src/ --coverage --watchAll=false --passWithNoTests"
   },
   "keywords": [],
   "author": "",
@@ -27,5 +30,8 @@
     "nodemon": "^2.0.19",
     "ts-jest": "^28.0.7",
     "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": "^18.x"
   }
 }
