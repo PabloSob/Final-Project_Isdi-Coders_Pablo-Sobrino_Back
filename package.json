@@ -9,7 +9,8 @@
     "start": "node .",
     "start:dev": "nodemon -q",
     "test": "jest src --passWithNoTests",
-    "test-watch": "jest src --watchAll"
+    "test-watch": "jest src --watchAll",
+    "test-coverage": "jest src/ --coverage --watchAll=false --passWothNoTests"
   },
   "keywords": [],
   "author": "",
@@ -29,5 +30,8 @@
     "nodemon": "^2.0.19",
     "ts-jest": "^28.0.7",
     "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": "^18.x"
   }
 }
