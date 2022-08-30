@@ -2,7 +2,8 @@ import "../../loadEnvironments";
 import Debug from "debug";
 import chalk from "chalk";
 import { NextFunction, Request, Response } from "express";
-import ICustomError from "../../interfaces/errorInterfaces";
+import { ValidationError } from "express-validation";
+import CustomError from "../../utils/CustomError";
 
 const debug = Debug("cryptorealm:server:middlewares:errors");
 
@@ -11,16 +12,25 @@ export const notFoundError = (req: Request, res: Response) => {
 };
 
 export const generalError = (
-  error: ICustomError,
+  error: CustomError,
   req: Request,
   res: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  const errorCode = error.code ?? 500;
-  const errorMessage = error.publicMessage ?? "General error";
+  const errorCode = error.code;
+  const status = error.statusCode ?? 500;
+  let errorMessage = error.publicMessage ?? "General error";
 
-  debug(chalk.red(error.message));
+  if (error instanceof ValidationError) {
+    debug(chalk.red("Request validation error:"));
+    error.details.body.forEach((errorInfo) => {
+      debug(chalk.red(errorInfo.message));
+    });
+    errorMessage = "Wrong data";
+  }
 
-  res.status(errorCode).json({ error: errorMessage });
+  debug(chalk.red(error.message, errorCode));
+
+  res.status(status).json({ error: errorMessage });
 };
