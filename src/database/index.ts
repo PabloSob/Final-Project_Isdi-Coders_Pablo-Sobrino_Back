@@ -5,8 +5,22 @@ import chalk from "chalk";
 
 const debug = Debug("cryptorealm:database");
 
-const connectDatabase = (mongoUrl: string) =>
+const connectDB = (mongoUrl: string) =>
   new Promise((resolve, reject) => {
+    mongoose.set("toJSON", {
+      virtuals: true,
+      transform: (doc, ret) => {
+        const newDocument = { ...ret };
+
+        // eslint-disable-next-line no-underscore-dangle
+        delete newDocument.__v;
+        // eslint-disable-next-line no-underscore-dangle
+        delete newDocument._id;
+        delete newDocument.password;
+        return newDocument;
+      },
+    });
+
     mongoose.connect(mongoUrl, (error) => {
       if (error) {
         debug(chalk.redBright("Can not connect the database"));
@@ -18,4 +32,4 @@ const connectDatabase = (mongoUrl: string) =>
     });
   });
 
-export default connectDatabase;
+export default connectDB;
