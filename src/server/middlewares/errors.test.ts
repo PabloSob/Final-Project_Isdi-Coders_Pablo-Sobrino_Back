@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from "express";
-import ICustomError from "../../interfaces/errorInterfaces";
+import CustomError from "../../utils/CustomError";
 import { generalError, notFoundError } from "./errors";
 
 describe("Given a notFoundError middleware", () => {
@@ -29,55 +29,86 @@ describe("Given a notFoundError middleware", () => {
 });
 
 describe("Given an generalError function", () => {
-  describe("When its called", () => {
-    test("Then it should respond with a status code given by the error received and a message", async () => {
-      const error = {
-        code: 343,
+  const req = {};
+  const next = jest.fn();
+  describe("When it's called", () => {
+    test("Then it should response with a status with the received error code and an error message", async () => {
+      const error: CustomError = {
         publicMessage: "General error",
+        code: "",
+        message: "",
+        name: "",
+        statusCode: 333,
       };
-      const req = {};
+
       const res = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn().mockResolvedValue(error.publicMessage),
       };
-      const next = jest.fn();
-      const status = 343;
-      const resolvedJson = { error: error.publicMessage };
+
+      const status = 333;
+      const responseJson = { error: error.publicMessage };
 
       await generalError(
-        error as ICustomError,
+        error as CustomError,
         req as unknown as Request,
         res as unknown as Response,
         next as NextFunction
       );
 
       expect(res.status).toBeCalledWith(status);
-      expect(res.json).toBeCalledWith(resolvedJson);
+      expect(res.json).toBeCalledWith(responseJson);
     });
-    describe("When its called without a code", () => {
-      test("Then it should return a response with 500", async () => {
-        const error = {
-          code: null as number,
-          publicMessage: null as string,
+
+    describe("When it's called with a status code null", () => {
+      test("Then it should respond with a status code 500", async () => {
+        const error: CustomError = {
+          publicMessage: "",
+          code: "",
+          message: "",
+          name: "",
+          statusCode: null,
         };
-        const request = {};
-        const response = {
+
+        const requestTest = {};
+        const responseTest = {
           status: jest.fn().mockReturnThis(),
           json: jest.fn().mockResolvedValue(error.publicMessage),
         };
-        const next = jest.fn();
-        const status = 500;
-        const resolvedJson = { error: "General error" };
+
+        const nextTest = jest.fn();
+
+        const expectedStatus = 500;
 
         await generalError(
-          error as ICustomError,
-          request as unknown as Request,
-          response as unknown as Response,
-          next as NextFunction
+          error as CustomError,
+          requestTest as unknown as Request,
+          responseTest as unknown as Response,
+          nextTest as NextFunction
         );
 
-        expect(response.status).toBeCalledWith(status);
-        expect(response.json).toBeCalledWith(resolvedJson);
+        expect(responseTest.status).toBeCalledWith(expectedStatus);
+      });
+      describe("When it is instantiated with a publicMessage null", () => {
+        test("Then it should give a response with the public message 'General error'", async () => {
+          const error: CustomError = {
+            publicMessage: null,
+            code: "",
+            message: "",
+            name: "",
+            statusCode: 500,
+          };
+          const response = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn().mockResolvedValue(error.publicMessage),
+          } as Partial<Response>;
+
+          const expectedResponse = { error: "General error" };
+
+          generalError(error, req as Request, response as Response, next);
+
+          expect(response.json).toBeCalledWith(expectedResponse);
+        });
       });
     });
   });
