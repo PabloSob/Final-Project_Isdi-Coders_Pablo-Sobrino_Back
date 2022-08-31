@@ -136,7 +136,7 @@ describe("Given an generalError function", () => {
             );
 
             expect(response.json).toBeCalledWith({
-              error: "Something went wrong",
+              error: "Wrong data",
             });
             expect(response.status).toBeCalledWith(expectedStatus);
           });

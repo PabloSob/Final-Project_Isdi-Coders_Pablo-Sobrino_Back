@@ -42,11 +42,12 @@ describe("Given a registerUser controller", () => {
     });
 
     test("Then it should invoke the response method json with a new User", async () => {
+      const expectedMessage = "User created";
       User.create = jest.fn().mockResolvedValue(userTest);
 
       await registerUser(requestTest as Request, res as Response, nextTest);
 
-      expect(res.json).toHaveBeenCalledWith({ user: userTest });
+      expect(res.json).toHaveBeenCalledWith({ message: expectedMessage });
     });
 
     describe("When it doesn't receives an user with required properties", () => {
