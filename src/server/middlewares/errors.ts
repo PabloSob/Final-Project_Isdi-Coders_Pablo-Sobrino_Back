@@ -36,7 +36,7 @@ export const generalError = (
 
     const status = error.statusCode;
 
-    const errorMessage = "Something went wrong";
+    const errorMessage = "Wrong data";
     res.status(status).json({ error: errorMessage });
   }
 };
