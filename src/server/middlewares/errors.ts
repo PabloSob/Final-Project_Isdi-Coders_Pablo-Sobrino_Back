@@ -12,25 +12,31 @@ export const notFoundError = (req: Request, res: Response) => {
 };
 
 export const generalError = (
-  error: CustomError,
+  error: CustomError | ValidationError,
   req: Request,
   res: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
-  const errorCode = error.code;
-  const status = error.statusCode ?? 500;
-  let errorMessage = error.publicMessage ?? "General error";
+  if (error instanceof CustomError) {
+    const errorCode = error.code;
+    const status = error.statusCode ?? 500;
+    const errorMessage = error.publicMessage ?? "General error";
+
+    debug(chalk.red(error.message, errorCode));
+
+    res.status(status).json({ error: errorMessage });
+  }
 
   if (error instanceof ValidationError) {
-    debug(chalk.red("Request validation error:"));
+    debug(chalk.red("Request validation errors: "));
     error.details.body.forEach((errorInfo) => {
       debug(chalk.red(errorInfo.message));
     });
-    errorMessage = "Wrong data";
+
+    const status = error.statusCode;
+
+    const errorMessage = "Something went wrong";
+    res.status(status).json({ error: errorMessage });
   }
-
-  debug(chalk.red(error.message, errorCode));
-
-  res.status(status).json({ error: errorMessage });
 };

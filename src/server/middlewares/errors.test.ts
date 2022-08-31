@@ -1,29 +1,30 @@
 import { Response, Request, NextFunction } from "express";
+import { ValidationError } from "express-validation";
 import CustomError from "../../utils/CustomError";
 import { generalError, notFoundError } from "./errors";
 
 describe("Given a notFoundError middleware", () => {
   describe("When it receives a response object", () => {
-    const responseTest = {
+    const testResponse = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     } as Partial<Response>;
-    const requestTest = {} as Partial<Request>;
+    const testRequest = {} as Partial<Request>;
 
     test("Then it should call the response method status with 404", () => {
       const status = 404;
 
-      notFoundError(requestTest as Request, responseTest as Response);
+      notFoundError(testRequest as Request, testResponse as Response);
 
-      expect(responseTest.status).toHaveBeenCalledWith(status);
+      expect(testResponse.status).toHaveBeenCalledWith(status);
     });
 
     test("Then it should call the response method with a json object with an error property", () => {
       const ErrorResponse = { error: "Endpoint not found" };
 
-      notFoundError(requestTest as Request, responseTest as Response);
+      notFoundError(testRequest as Request, testResponse as Response);
 
-      expect(responseTest.json).toHaveBeenCalledWith(ErrorResponse);
+      expect(testResponse.json).toHaveBeenCalledWith(ErrorResponse);
     });
   });
 });
@@ -33,13 +34,7 @@ describe("Given an generalError function", () => {
   const next = jest.fn();
   describe("When it's called", () => {
     test("Then it should response with a status with the received error code and an error message", async () => {
-      const error: CustomError = {
-        publicMessage: "General error",
-        code: "",
-        message: "",
-        name: "",
-        statusCode: 333,
-      };
+      const error = new CustomError(333, "", "General error");
 
       const res = {
         status: jest.fn().mockReturnThis(),
@@ -62,13 +57,7 @@ describe("Given an generalError function", () => {
 
     describe("When it's called with a status code null", () => {
       test("Then it should respond with a status code 500", async () => {
-        const error: CustomError = {
-          publicMessage: "",
-          code: "",
-          message: "",
-          name: "",
-          statusCode: null,
-        };
+        const error = new CustomError(null, "", "");
 
         const requestTest = {};
         const responseTest = {
@@ -89,15 +78,11 @@ describe("Given an generalError function", () => {
 
         expect(responseTest.status).toBeCalledWith(expectedStatus);
       });
+
       describe("When it is instantiated with a publicMessage null", () => {
-        test("Then it should give a response with the public message 'General error'", async () => {
-          const error: CustomError = {
-            publicMessage: null,
-            code: "",
-            message: "",
-            name: "",
-            statusCode: 500,
-          };
+        test("Then it should give a response with the public message 'Everything went wrong'", async () => {
+          const error = new CustomError(500, "", null);
+
           const response = {
             status: jest.fn().mockReturnThis(),
             json: jest.fn().mockResolvedValue(error.publicMessage),
@@ -105,9 +90,56 @@ describe("Given an generalError function", () => {
 
           const expectedResponse = { error: "General error" };
 
-          generalError(error, req as Request, response as Response, next);
+          await generalError(error, req as Request, response as Response, next);
 
           expect(response.json).toBeCalledWith(expectedResponse);
+        });
+
+        describe("When it's called with a ValidationError", () => {
+          test("Then it should send a 400 status and error message", async () => {
+            const fakeError = new ValidationError(
+              {
+                body: [
+                  {
+                    message: "Error 1",
+                    isJoi: true,
+                    annotate: () => "",
+                    _original: "",
+                    name: "ValidationError",
+                    details: [],
+                  },
+                  {
+                    message: "Error 2",
+                    isJoi: true,
+                    annotate: () => "",
+                    _original: "",
+                    name: "ValidationError",
+                    details: [],
+                  },
+                ],
+              },
+              { statusCode: 400 }
+            );
+
+            const response = {
+              status: jest.fn().mockReturnThis(),
+              json: jest.fn(),
+            } as Partial<Response>;
+
+            const expectedStatus = 400;
+
+            await generalError(
+              fakeError,
+              req as Request,
+              response as Response,
+              next
+            );
+
+            expect(response.json).toBeCalledWith({
+              error: "Something went wrong",
+            });
+            expect(response.status).toBeCalledWith(expectedStatus);
+          });
         });
       });
     });
