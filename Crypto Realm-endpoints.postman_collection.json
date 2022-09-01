@@ -35,6 +35,28 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"userName\":\"holas\", \"password\":\"insane\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiURLlocal}}users/login",
+          "host": ["{{apiURLlocal}}users"],
+          "path": ["login"]
+        }
+      },
+      "response": []
     }
   ],
   "event": [
