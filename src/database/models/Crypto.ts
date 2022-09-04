@@ -31,6 +31,6 @@ const cryptoSchema = new Schema({
   },
 });
 
-const Crypto = model("Crypto", cryptoSchema, "cryptos");
+const Crypto = model("Crypto", cryptoSchema, "crypto");
 
 export default Crypto;

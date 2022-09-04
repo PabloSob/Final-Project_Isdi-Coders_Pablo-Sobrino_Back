@@ -1,90 +1,139 @@
 {
-  "info": {
-    "_postman_id": "7bb4e412-6314-494a-ab01-bc49ec4645a3",
-    "name": "Crypto Realm-endpoints",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "22240201"
-  },
-  "item": [
-    {
-      "name": "Endpoint not found",
-      "request": {
-        "method": "GET",
-        "header": []
-      },
-      "response": []
-    },
-    {
-      "name": "Register",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"userName\":\"manolo\",\"password\":\"admin\"}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{apiURLlocal}}users/register",
-          "host": ["{{apiURLlocal}}users"],
-          "path": ["register"]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "Login",
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"userName\":\"holas\", \"password\":\"insane\"}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{apiURLlocal}}users/login",
-          "host": ["{{apiURLlocal}}users"],
-          "path": ["login"]
-        }
-      },
-      "response": []
-    }
-  ],
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [""]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [""]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "apiURLlocal",
-      "value": "http://localhost:4000/",
-      "type": "string"
-    },
-    {
-      "key": "apiOrigin",
-      "value": "https://psobrino-final-project-202207.herokuapp.com/",
-      "type": "string"
-    }
-  ]
+	"info": {
+		"_postman_id": "7bb4e412-6314-494a-ab01-bc49ec4645a3",
+		"name": "Crypto Realm-endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22240201"
+	},
+	"item": [
+		{
+			"name": "Endpoint not found",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiOrigin}}",
+					"host": [
+						"{{apiOrigin}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userName\":\"asdasd\",\"password\":\"asdasd\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiURLlocal}}/users/register",
+					"host": [
+						"{{apiURLlocal}}"
+					],
+					"path": [
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userName\":\"asdasd\", \"password\":\"asdasd\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiURLlocal}}/users/login",
+					"host": [
+						"{{apiURLlocal}}"
+					],
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllCrypto",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiURLlocal}}/crypto",
+					"host": [
+						"{{apiURLlocal}}"
+					],
+					"path": [
+						"crypto"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apiURLlocal",
+			"value": "http://localhost:4000",
+			"type": "string"
+		},
+		{
+			"key": "apiOrigin",
+			"value": "https://psobrino-final-project-202207.herokuapp.com",
+			"type": "string"
+		}
+	]
 }
