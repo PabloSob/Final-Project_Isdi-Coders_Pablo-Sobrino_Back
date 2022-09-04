@@ -10,7 +10,11 @@
       "name": "Endpoint not found",
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "{{apiOrigin}}",
+          "host": ["{{apiOrigin}}"]
+        }
       },
       "response": []
     },
@@ -21,7 +25,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\"userName\":\"manolo\",\"password\":\"admin\"}",
+          "raw": "{\"userName\":\"asdasd\",\"password\":\"asdasd\"}",
           "options": {
             "raw": {
               "language": "json"
@@ -29,9 +33,9 @@
           }
         },
         "url": {
-          "raw": "{{apiURLlocal}}users/register",
-          "host": ["{{apiURLlocal}}users"],
-          "path": ["register"]
+          "raw": "{{apiURLlocal}}/users/register",
+          "host": ["{{apiURLlocal}}"],
+          "path": ["users", "register"]
         }
       },
       "response": []
@@ -43,7 +47,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\"userName\":\"holas\", \"password\":\"insane\"}",
+          "raw": "{\"userName\":\"asdasd\", \"password\":\"asdasd\"}",
           "options": {
             "raw": {
               "language": "json"
@@ -51,9 +55,34 @@
           }
         },
         "url": {
-          "raw": "{{apiURLlocal}}users/login",
-          "host": ["{{apiURLlocal}}users"],
-          "path": ["login"]
+          "raw": "{{apiURLlocal}}/users/login",
+          "host": ["{{apiURLlocal}}"],
+          "path": ["users", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GetAllCrypto",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiURLlocal}}/crypto",
+          "host": ["{{apiURLlocal}}"],
+          "path": ["crypto"]
         }
       },
       "response": []
@@ -78,12 +107,12 @@
   "variable": [
     {
       "key": "apiURLlocal",
-      "value": "http://localhost:4000/",
+      "value": "http://localhost:4000",
       "type": "string"
     },
     {
       "key": "apiOrigin",
-      "value": "https://psobrino-final-project-202207.herokuapp.com/",
+      "value": "https://psobrino-final-project-202207.herokuapp.com",
       "type": "string"
     }
   ]
