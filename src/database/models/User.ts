@@ -10,6 +10,7 @@ const userSchema = new Schema({
     type: String,
     require: true,
   },
+  cryptos: [{ type: Schema.Types.ObjectId, ref: "Crypto" }],
 });
 
 const User = model("User", userSchema, "users");
