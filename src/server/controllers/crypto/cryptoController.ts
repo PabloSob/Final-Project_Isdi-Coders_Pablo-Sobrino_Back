@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Crypto from "../../../database/models/Crypto";
 import CustomError from "../../../utils/CustomError";
 
-const getAllCrypto = async (
+export const getAllCrypto = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -25,4 +25,24 @@ const getAllCrypto = async (
   }
 };
 
-export default getAllCrypto;
+export const deleteCrypto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+
+  try {
+    const deleteCryptoItem = await Crypto.findByIdAndDelete(id);
+    if (deleteCryptoItem) {
+      res.status(200).json({ message: "Crypto deleted correctly" });
+    }
+  } catch (error) {
+    const newError = new CustomError(
+      404,
+      "Error while deleting crypto",
+      "Error while deleting crypto"
+    );
+    next(newError);
+  }
+};
