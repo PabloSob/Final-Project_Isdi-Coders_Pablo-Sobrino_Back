@@ -86,6 +86,29 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "DeleteCrypto",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRva2tpZSIsInVzZXJOYW1lIjoiZG9ra2llIiwiaWF0IjoxNjYyMzkxOTcyfQ.i8Aj-EnMkm87-BZvhHLwY_ZrdMHJfb0SdsOY9p9O5cw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{apiURLlocal}}/crypto/id",
+          "host": ["{{apiURLlocal}}"],
+          "path": ["crypto", "id"]
+        }
+      },
+      "response": []
     }
   ],
   "event": [
