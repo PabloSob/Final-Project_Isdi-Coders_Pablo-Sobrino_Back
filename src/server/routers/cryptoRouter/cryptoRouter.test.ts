@@ -43,7 +43,7 @@ describe("Given a GET endpoint", () => {
 
   describe("When it receives a request with method get but there isn't any object on the database", () => {
     test("Then it should throw a 'No crypto found' error", async () => {
-      const expectedStatus = 404;
+      const expectedStatus = 200;
 
       await request(app).get("/crypto").expect(expectedStatus);
     });

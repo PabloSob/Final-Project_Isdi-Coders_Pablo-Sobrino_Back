@@ -60,20 +60,6 @@ describe("Given a getAllcrypto function", () => {
       expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
-
-  describe("When called but there are no crypto avaliable", () => {
-    test("Then it should respond with 'Error while getting crypto' message", async () => {
-      Crypto.find = jest.fn().mockReturnValue([]);
-
-      const expectedError = { crypto: "No crypto found" };
-      const status = 404;
-
-      await getAllCrypto(req as Request, res as Response, next);
-
-      expect(res.status).toHaveBeenCalledWith(status);
-      expect(res.json).toHaveBeenCalledWith(expectedError);
-    });
-  });
 });
 
 describe("Given a deleteCrypto function", () => {

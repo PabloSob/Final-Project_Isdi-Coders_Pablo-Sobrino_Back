@@ -9,14 +9,10 @@ export const getAllCrypto = async (
 ) => {
   try {
     const crypto = await Crypto.find();
-    if (crypto.length === 0) {
-      res.status(404).json({ crypto: "No crypto found" });
-      return;
-    }
     res.status(200).json({ crypto });
   } catch (error) {
     const newError = new CustomError(
-      404,
+      200,
       "Error while getting crypto",
       "No crypto found"
     );
