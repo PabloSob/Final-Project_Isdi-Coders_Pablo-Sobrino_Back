@@ -2,7 +2,27 @@ import { NextFunction, Request, Response } from "express";
 import Crypto from "../../../database/models/Crypto";
 import { ICrypto } from "../../../interfaces/cryptoInterface";
 import CustomError from "../../../utils/CustomError";
-import { getAllCrypto, deleteCrypto } from "./cryptoController";
+import { getAllCrypto, deleteCrypto, getById } from "./cryptoController";
+
+jest.mock("jsonwebtoken", () => ({
+  ...jest.requireActual("jsonwebtoken"),
+  decode: jest.fn().mockReturnValue({
+    id: "34534dsfg",
+  }),
+}));
+
+jest.mock("../../../database/models/Crypto", () => ({
+  find: jest.fn().mockReturnValue([
+    {
+      title: "cococoin",
+      logo: "crypto.png",
+      description: "a great crypto",
+      team: 2,
+      value: 4,
+      ICO: new Date(),
+    },
+  ]),
+}));
 
 describe("Given a getAllcrypto function", () => {
   const mockCrypto: ICrypto = {
@@ -50,7 +70,7 @@ describe("Given a getAllcrypto function", () => {
       Crypto.find = jest.fn().mockRejectedValue(new Error());
 
       const expectedError = new CustomError(
-        404,
+        200,
         "Error while getting crypto",
         "No crypto found"
       );
@@ -119,6 +139,88 @@ describe("Given a deleteCrypto function", () => {
 
         expect(next).toHaveBeenCalledWith(expectedError);
       });
+    });
+  });
+});
+
+describe("Given a getById function", () => {
+  describe("When it's called with a request, response and next function", () => {
+    test("Then it show response with a status 200 and the crypto found", async () => {
+      const mockCrypto: ICrypto = {
+        title: "cococoin",
+        logo: "crypto.png",
+        description: "a great crypto",
+        team: 2,
+        value: 4,
+        ICO: new Date(),
+      };
+      const requestTest = {
+        params: { id: "4654dfsg546" },
+      } as Partial<Request>;
+
+      const expectedStatus = 200;
+      const expectedResult = { crypto: mockCrypto };
+      const next = jest.fn() as NextFunction;
+
+      const responseTest = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis(),
+      } as Partial<Response>;
+
+      Crypto.findById = jest.fn().mockResolvedValue(expectedResult);
+
+      await getById(requestTest as Request, responseTest as Response, next);
+      expect(responseTest.status).toHaveBeenCalledWith(expectedStatus);
+    });
+  });
+
+  describe("When it receives a request to find a crypto, but can't find it", () => {
+    test("Then it should response with 404 as code", async () => {
+      const requestTest = {
+        params: { id: "" },
+      } as Partial<Request>;
+
+      const expectedStatus = 404;
+
+      Crypto.findById = jest.fn().mockReturnValue("");
+
+      const next = jest.fn() as NextFunction;
+
+      const responseTest = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+
+      await getById(requestTest as Request, responseTest as Response, next);
+
+      expect(responseTest.status).toHaveBeenCalledWith(expectedStatus);
+    });
+  });
+
+  describe("When it receives a request to find a crypto, but has error while finding the crypto requested", () => {
+    test("Then it should call next function with an error", async () => {
+      Crypto.findById = jest.fn().mockRejectedValue(new Error());
+
+      const requestTest = {
+        params: { id: "" },
+      } as Partial<Request>;
+
+      const responseTest = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as Partial<Response>;
+
+      const expectedError = new CustomError(
+        404,
+        "No crypto found",
+        "Error while finding the crypto requested"
+      );
+
+      const next = jest.fn() as NextFunction;
+
+      await getById(requestTest as Request, responseTest as Response, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
