@@ -4,8 +4,18 @@ import mongoose from "mongoose";
 import app from "../..";
 import connectDB from "../../../database";
 import Crypto from "../../../database/models/Crypto";
+import User from "../../../database/models/User";
 
 let mongoServer: MongoMemoryServer;
+
+jest.mock("jsonwebtoken", () => ({
+  ...jest.requireActual("jsonwebtoken"),
+  decode: jest.fn(),
+}));
+
+jest.mock("../../middlewares/authentication", () => ({
+  authentication: jest.fn().mockImplementation((req, res, next) => next()),
+}));
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
@@ -16,6 +26,7 @@ beforeAll(async () => {
 
 afterEach(async () => {
   await Crypto.deleteMany({});
+  await User.deleteMany({});
 });
 
 afterAll(async () => {
@@ -46,6 +57,27 @@ describe("Given a GET endpoint", () => {
       const expectedStatus = 200;
 
       await request(app).get("/crypto").expect(expectedStatus);
+    });
+  });
+});
+
+describe("Given a DELETE endpoint", () => {
+  describe("When it receives a request with method delete", () => {
+    test("Then it should response with status 200", async () => {
+      const expectedStatus = 200;
+
+      const crypto = await Crypto.create({
+        title: "cococoin",
+        logo: "crypto.png",
+        description: "a great crypto",
+        team: 2,
+        value: 4,
+        ICO: new Date(),
+      });
+
+      const idCrypto = crypto.id;
+
+      await request(app).delete(`/crypto/${idCrypto}`).expect(expectedStatus);
     });
   });
 });

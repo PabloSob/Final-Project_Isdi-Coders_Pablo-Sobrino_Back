@@ -42,3 +42,29 @@ export const deleteCrypto = async (
     next(newError);
   }
 };
+
+export const getById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+
+  try {
+    const dbCrypto = await Crypto.findById(id);
+    if (!dbCrypto) {
+      res.status(404).json({ crypto: "No crypto found" });
+      return;
+    }
+
+    res.status(200).json({ crypto: dbCrypto });
+  } catch (error) {
+    const newError = new CustomError(
+      404,
+      "No crypto found",
+      "Error while finding the crypto requested"
+    );
+
+    next(newError);
+  }
+};

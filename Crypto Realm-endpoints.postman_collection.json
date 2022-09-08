@@ -109,6 +109,35 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "GetCryptoByID",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1vbm9zIiwidXNlck5hbWUiOiJtb25vcyIsImlhdCI6MTY2MjYyNjAwMX0.GdIwV3FjUNQXaW4OAZz7SyHVxVFYp3demj7XScYtkmE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{apiURLlocal}}/crypto/:id",
+          "host": ["{{apiURLlocal}}"],
+          "path": ["crypto", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": null
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "event": [
