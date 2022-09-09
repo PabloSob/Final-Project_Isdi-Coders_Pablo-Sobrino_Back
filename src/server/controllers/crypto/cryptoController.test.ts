@@ -2,7 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import Crypto from "../../../database/models/Crypto";
 import { ICrypto } from "../../../interfaces/cryptoInterface";
 import CustomError from "../../../utils/CustomError";
-import { getAllCrypto, deleteCrypto, getById } from "./cryptoController";
+import {
+  getAllCrypto,
+  deleteCrypto,
+  getById,
+  createCrypto,
+} from "./cryptoController";
 
 jest.mock("jsonwebtoken", () => ({
   ...jest.requireActual("jsonwebtoken"),
@@ -221,6 +226,52 @@ describe("Given a getById function", () => {
       await getById(requestTest as Request, responseTest as Response, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a createCrypto controller", () => {
+  describe("When its invoked with method createCrypto", () => {
+    test("then it should call the status method with a 200 and json with the crypto created", async () => {
+      const mockCrypto: ICrypto = {
+        title: "cococoin",
+        logo: "",
+        description: "",
+        team: 2,
+        value: 4,
+        ICO: new Date(),
+      };
+      const req = {} as Partial<Request>;
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockResolvedValue({ cryptoCreated: mockCrypto }),
+      };
+
+      const next = jest.fn();
+      Crypto.create = jest.fn().mockResolvedValue(mockCrypto);
+
+      await createCrypto(req as Request, res as Response, next as NextFunction);
+
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith({ cryptoCreated: mockCrypto });
+    });
+    test("And if it throw an error creating it should next with an error", async () => {
+      const error = new CustomError(
+        400,
+        "Error creating a crypto",
+        "Cannot create the crypto"
+      );
+      const req = {} as Partial<Request>;
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockResolvedValue([]),
+      };
+      const next = jest.fn();
+      Crypto.create = jest.fn().mockRejectedValue(error);
+
+      await createCrypto(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(error);
     });
   });
 });
