@@ -138,6 +138,38 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "CreateCrypto",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhYWFhIiwidXNlck5hbWUiOiJhYWFhYSIsImlhdCI6MTY2MjcwNzY0NH0.IAFfitWZ5Vpv41uBB7Wg3hzavVjsqQfiFNIJcfAFMlI",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \n    \"title\":\"manflis\", \n    \"logo\":\"/lood.png\",\n    \"description\":\"ouf yeah\",\n    \"team\": \"31\",\n    \"value\": \"3\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{apiURLlocal}}/crypto",
+          "host": ["{{apiURLlocal}}"],
+          "path": ["crypto"]
+        }
+      },
+      "response": []
     }
   ],
   "event": [
