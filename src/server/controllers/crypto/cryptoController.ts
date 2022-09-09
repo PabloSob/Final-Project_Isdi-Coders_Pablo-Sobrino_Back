@@ -68,3 +68,25 @@ export const getById = async (
     next(newError);
   }
 };
+
+export const createCrypto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const crypto = req.body;
+
+  try {
+    const cryptoCreated = await Crypto.create(crypto);
+
+    res.status(201).json({ cryptoCreated });
+  } catch (error) {
+    const newError = new CustomError(
+      400,
+      "Error creating a crypto",
+      "Cannot create the crypto"
+    );
+
+    next(newError);
+  }
+};
