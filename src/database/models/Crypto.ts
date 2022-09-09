@@ -23,7 +23,7 @@ const cryptoSchema = new Schema({
   },
   ICO: {
     type: Date,
-    required: true,
+    default: new Date(),
   },
   owner: {
     type: Schema.Types.ObjectId,
