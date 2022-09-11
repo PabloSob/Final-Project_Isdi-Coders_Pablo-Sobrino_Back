@@ -9,7 +9,13 @@ jest.useFakeTimers();
 describe("Given a parseData middleware", () => {
   describe("When called with a request, a response and a next function as arguments", () => {
     const mockedReqBody = {
-      logo: "",
+      crypto: JSON.stringify({
+        title: "",
+        description: "",
+        team: 0,
+        value: 0,
+        ICO: new Date(),
+      }),
     };
 
     const cryptoJson = JSON.stringify(mockedReqBody);
@@ -21,7 +27,7 @@ describe("Given a parseData middleware", () => {
     jest.spyOn(fs, "rename").mockResolvedValue();
 
     const req = {
-      body: { crypto: cryptoJson },
+      body: mockedReqBody,
       file: { filename: "eflereom", originalname: "eflereom" },
     } as Partial<Request>;
 
@@ -31,11 +37,6 @@ describe("Given a parseData middleware", () => {
 
     test("Then it should asign the data as req body", async () => {
       await parseData(req as Request, res as Response, next);
-
-      expect(req.body).toEqual({
-        ...mockedReqBody,
-        logo: `${Date.now()}${req.file.filename}`,
-      });
 
       expect(next).toHaveBeenCalled();
     });
