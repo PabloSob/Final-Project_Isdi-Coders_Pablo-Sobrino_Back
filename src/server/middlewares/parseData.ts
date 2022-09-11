@@ -23,8 +23,8 @@ const parseData = async (req: Request, res: Response, next: NextFunction) => {
 
     next();
   } catch (error) {
-    const customError = new CustomError(404, "Missing data", "Missing data");
-    next(customError);
+    const newError = new CustomError(404, "Missing data", "Missing data");
+    next(newError);
   }
 };
 
