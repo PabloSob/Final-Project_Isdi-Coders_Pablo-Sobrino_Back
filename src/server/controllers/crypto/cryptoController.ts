@@ -90,3 +90,35 @@ export const createCrypto = async (
     next(newError);
   }
 };
+
+export const modifyCrypto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const crypto = req.body;
+  const { id } = req.params;
+
+  try {
+    const modifiedCrypto = {
+      ...crypto,
+      title: crypto.title,
+      logo: crypto.logo,
+      description: crypto.description,
+      team: crypto.team,
+      value: crypto.value,
+      ICO: crypto.ICO,
+    };
+
+    const upDatedCrypto = await Crypto.findByIdAndUpdate(id, modifiedCrypto);
+    res.status(200).json({ upDatedCrypto });
+  } catch (error) {
+    const newError = new CustomError(
+      400,
+      "Error to modify crypto",
+      "Could not modify the crypto"
+    );
+
+    next(newError);
+  }
+};
