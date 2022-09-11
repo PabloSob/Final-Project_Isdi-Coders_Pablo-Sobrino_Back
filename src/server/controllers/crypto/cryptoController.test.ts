@@ -7,6 +7,7 @@ import {
   deleteCrypto,
   getById,
   createCrypto,
+  modifyCrypto,
 } from "./cryptoController";
 
 jest.mock("jsonwebtoken", () => ({
@@ -272,6 +273,66 @@ describe("Given a createCrypto controller", () => {
       await createCrypto(req as Request, res as Response, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+});
+
+describe("Given a modifyCrypto function", () => {
+  describe("When it's called with a request, response and next function", () => {
+    test("Then it show response with a status 200 and the modified crypto", async () => {
+      const upDatedCrypto = {
+        title: "cococoin",
+        logo: "",
+        description: "",
+        team: 2,
+        value: 4,
+        ICO: new Date(),
+      };
+
+      const requestTest = {
+        body: upDatedCrypto,
+        params: { id: "62e0ajh9b455361" },
+      } as Partial<Request>;
+
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockResolvedValue({ upDatedCrypto }),
+      };
+
+      Crypto.findByIdAndUpdate = jest.fn().mockResolvedValue(upDatedCrypto);
+
+      const expectedStatus = 200;
+
+      const next = jest.fn() as NextFunction;
+
+      await modifyCrypto(requestTest as Request, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+      expect(res.json).toHaveBeenCalledWith({ upDatedCrypto });
+    });
+
+    test("Then it should next with an error if it cannot complete the update", async () => {
+      const errorTest = new CustomError(
+        400,
+        "Error to modify crypto",
+        "Could not modify the crypto"
+      );
+
+      Crypto.findByIdAndUpdate = jest.fn().mockRejectedValue(errorTest);
+
+      const req = {
+        params: { id: "" },
+      } as Partial<Request>;
+
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockResolvedValue([]),
+      };
+      const next = jest.fn();
+
+      await modifyCrypto(req as Request, res as Response, next as NextFunction);
+
+      expect(next).toHaveBeenCalledWith(errorTest);
     });
   });
 });
