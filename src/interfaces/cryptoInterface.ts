@@ -5,4 +5,5 @@ export interface ICrypto {
   team: number;
   value: number;
   ICO: Date;
+  imageBackUp?: string;
 }

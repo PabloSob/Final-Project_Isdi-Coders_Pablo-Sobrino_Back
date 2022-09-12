@@ -29,6 +29,9 @@ const cryptoSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  imageBackUp: {
+    type: String,
+  },
 });
 
 const Crypto = model("Crypto", cryptoSchema, "crypto");
